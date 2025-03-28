@@ -91,6 +91,10 @@ const FloatingPictures: React.FC = () => {
     '/picture12.JPG',
     '/picture13.JPG',
     '/picture14.JPG',
+    '/IMG_0366.JPG',
+    '/IMG_1187.JPG',
+    '/IMG_1209.JPG',
+    '/IMG_8802.JPG',
   ];
 
   return (
