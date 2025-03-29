@@ -32,7 +32,7 @@ function App() {
       <AnimatedBackground showFloatingText={true}>
         <CursorTrail />
         <BackgroundAnimations />
-        <div className="flex flex-col items-center z-10 relative">
+        <div className="flex flex-col items-center z-10 relative mt-16">
           <div className="mb-8 text-center">
             <div className="mb-16">
               <h1 
