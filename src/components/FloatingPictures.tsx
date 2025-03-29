@@ -97,34 +97,50 @@ const FloatingPictures: React.FC = () => {
     '/IMG_8802.JPG',
   ];
 
+  // Create a more even distribution by dividing the screen into zones
+  const createEvenDistribution = () => {
+    // Divide the screen into a grid of zones
+    const numZones = pictures.length;
+    const zonesPerRow = Math.ceil(Math.sqrt(numZones));
+    const zonesPerColumn = Math.ceil(numZones / zonesPerRow);
+    
+    // Calculate zone dimensions
+    const zoneWidth = window.innerWidth / zonesPerRow;
+    const zoneHeight = window.innerHeight / zonesPerColumn;
+    
+    // Create an array of positions, one for each picture
+    return pictures.map((_, index) => {
+      // Determine which zone this picture belongs to
+      const zoneRow = Math.floor(index / zonesPerRow);
+      const zoneCol = index % zonesPerRow;
+      
+      // Calculate the center of the zone
+      const zoneCenterX = zoneCol * zoneWidth + zoneWidth / 2;
+      const zoneCenterY = zoneRow * zoneHeight + zoneHeight / 2;
+      
+      // Add randomness within the zone (but not too much)
+      // Use a smaller percentage of the zone size to keep pictures more centered in their zones
+      const randomOffsetX = (Math.random() - 0.5) * zoneWidth * 0.7;
+      const randomOffsetY = (Math.random() - 0.5) * zoneHeight * 0.7;
+      
+      return {
+        x: zoneCenterX + randomOffsetX,
+        y: zoneCenterY + randomOffsetY
+      };
+    });
+  };
+  
+  // Generate positions once
+  const positions = createEvenDistribution();
+
   return (
     <div className="fixed inset-0 z-10 overflow-hidden pointer-events-none">
       <div className="absolute inset-0 pointer-events-none" style={{ perspective: '1000px' }}>
         {pictures.map((pic, index) => {
-        // Distribute pictures more evenly across the screen
-        // Calculate grid dimensions
-        const gridSize = Math.ceil(Math.sqrt(pictures.length));
-        const cellWidth = window.innerWidth / gridSize;
-        const cellHeight = window.innerHeight / gridSize;
-        
-        // Calculate base grid position
-        const row = Math.floor(index / gridSize);
-        const col = index % gridSize;
-        
-        // Add some randomness to the grid position
-        const randomOffset = Math.min(cellWidth, cellHeight) * 0.4;
-        const baseX = cellWidth * (col + 0.5) + (Math.random() - 0.5) * randomOffset;
-        const baseY = cellHeight * (row + 0.5) + (Math.random() - 0.5) * randomOffset;
-        
-        // Add extra randomness to spread pictures more evenly
-        const spreadFactor = Math.min(window.innerWidth, window.innerHeight) * 0.15;
-        const angleOffset = Math.random() * Math.PI * 2;
-        const spreadX = Math.cos(angleOffset) * spreadFactor;
-        const spreadY = Math.sin(angleOffset) * spreadFactor;
-        
-        // Final position with combined grid and spread
-        const randomX = baseX + spreadX;
-        const randomY = baseY + spreadY;
+        // Use the pre-calculated position for this picture
+        const position = positions[index];
+        const randomX = position.x;
+        const randomY = position.y;
           return (
             <FloatingPicture
               key={index}
