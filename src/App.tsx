@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Heart, ChevronDown } from 'lucide-react';
 import BackgroundAnimations from './components/BackgroundAnimations';
 import FloatingPictures from './components/FloatingPictures';
+import ProposalPage from './components/ProposalPage';
+import AnimatedBackground from './components/AnimatedBackground';
+import CursorTrail from './components/CursorTrail';
 
 function App() {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
@@ -26,9 +29,10 @@ function App() {
 
   if (!showContent) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100 flex items-center justify-center relative overflow-hidden">
+      <AnimatedBackground showFloatingText={true}>
+        <CursorTrail />
         <BackgroundAnimations />
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center z-10 relative">
           <div className="mb-8 text-center">
             <div className="mb-16">
               <h1 
@@ -59,9 +63,27 @@ function App() {
           </div>
 
           <div 
-            className="cursor-pointer transform hover:scale-105 transition-transform duration-300 envelope-container relative"
+            className="cursor-pointer transform hover:scale-105 transition-transform duration-300 envelope-container relative envelope-hover-effect envelope-glow group"
             onClick={handleEnvelopeClick}
+            title="Click me, I'm hiding something sweet... 💌"
           >
+            {/* Floating hearts on hover */}
+            <div className="absolute -top-10 -right-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              {[...Array(5)].map((_, i) => (
+                <div 
+                  key={i}
+                  className="absolute text-xl"
+                  style={{
+                    left: `${Math.random() * 60}px`,
+                    top: `${Math.random() * 60}px`,
+                    animation: `float-up ${1 + Math.random() * 2}s linear infinite`,
+                    animationDelay: `${i * 0.2}s`,
+                  }}
+                >
+                  ❤️
+                </div>
+              ))}
+            </div>
             <div className={`relative w-[400px] h-[300px] ${isEnvelopeOpen ? 'pointer-events-none' : ''}}`}>
               {/* Main envelope body */}
               <div className="absolute inset-0 bg-gradient-to-br from-pink-100 to-pink-200 shadow-lg rounded-sm border-2 border-pink-300">
@@ -109,37 +131,17 @@ function App() {
             </div>
           </div>
         </div>
-      </div>
+      </AnimatedBackground>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100 flex flex-col items-center justify-center relative p-4 overflow-hidden">
+    <AnimatedBackground showFloatingText={false}>
+      <CursorTrail />
       <BackgroundAnimations />
       
       {!yesPressed ? (
-        <div className="text-center max-w-2xl mx-auto relative z-10">
-          <h1 className="text-4xl md:text-6xl font-bold text-pink-600 mb-8 names-title">
-            Will you be my girlfriend?
-          </h1>
-          
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <button
-              className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-3 px-12 rounded-full transform hover:scale-110 transition-transform duration-200 shadow-lg"
-              onClick={() => setYesPressed(true)}
-            >
-              Yes!
-            </button>
-            
-            <button
-              className="bg-red-500 hover:bg-red-600 text-white text-xl font-bold py-2 px-8 rounded-full transition-all duration-200 shadow-lg"
-              style={getNoButtonStyle()}
-              onClick={() => setNoCount(noCount + 1)}
-            >
-              {noCount === 0 ? 'No' : 'Are you sure?'}
-            </button>
-          </div>
-        </div>
+        <ProposalPage onYesClick={() => setYesPressed(true)} />
       ) : (
         <div className="relative w-full h-screen overflow-hidden">
           <FloatingPictures />
@@ -174,7 +176,7 @@ function App() {
           </div>
         </div>
       )}
-    </div>
+    </AnimatedBackground>
   );
 }
 

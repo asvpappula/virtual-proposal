@@ -15,7 +15,7 @@ const BackgroundAnimations: React.FC = () => {
               className={`cloud absolute w-${randomSize} h-${parseInt(randomSize)/2} rounded-full`}
               style={{
                 background: `rgba(255, 255, 255, ${opacity})`,
-                animation: `float ${30 + i * 5}s linear infinite`,
+                animation: `float-horizontal ${30 + i * 5}s linear infinite`,
                 animationDelay: `${i * -3}s`,
                 left: `${120 + (i * 15)}%`,
                 top: `${i * 20 + Math.random() * 30}px`,
@@ -38,7 +38,7 @@ const BackgroundAnimations: React.FC = () => {
       {/* Add keyframes for cloud animation */}
       <style>
         {`
-          @keyframes float {
+          @keyframes float-horizontal {
             from { transform: translateX(0); }
             to { transform: translateX(-100%); }
           }
